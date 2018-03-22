@@ -1,38 +1,50 @@
-# import modules
 import sys
 import pygame
+from random import randint
 
-# define color white (Red, Green, Blue) (0-255)
 WHITE = (255, 255, 255)
+# the color black
+BLACK = (0, 0, 0)
 
-# is the game finished?
 finished = False
 
-# initialize pygame
 pygame.init()
 
-# set our display as fullscreen
 game_display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-# set the background color as white
 game_display.fill(WHITE)
-# update the display
 pygame.display.update()
 
-# main loop, do this while game is not finished (finished = False)
+# text display function, accepts string text input
+def text_display(text):
+    # our font is the pygame built-in, size 256
+    text_font = pygame.font.Font(None, 256)
+    # our text surface is created by rendering the text
+    # using the chosen font
+    text_surface = text_font.render(text, True, BLACK)
+    # get the rectangle for our text surface
+    text_rectangle = text_surface.get_rect()
+    # fill the display with white
+    game_display.fill(WHITE)
+    # center the text by centering its rectangle
+    text_rectangle.center = (game_display.get_width()/2,
+                             game_display.get_height()/2)
+    #display the text
+    game_display.blit(text_surface, text_rectangle)
+    # update the display
+    pygame.display.update()
+    
 while not finished:
-    # cycle through events in the queue
     for event in pygame.event.get():
-        # if a key has been pushed and released
         if event.type == pygame.KEYUP:
-            # and if that key is ESCAPE, quit!
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-        # if a different quit event is detected, quit
+            # if the key pressed is SPACE, send a random
+            # integer string to the text_display function
+            if event.key == pygame.K_SPACE:
+                text_display(str(randint(1, 10)))
         if event.type == pygame.QUIT:
-            # finished = True, so we exit loop
             finished = True
-
-# if we've exited the loop, we quit!        
+      
 pygame.quit()
 sys.exit()
