@@ -4,9 +4,9 @@ import pygame
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-START_TIME_SEC = 60
-
 finished = False
+time_passed = 0
+time_remaining = 60
 
 pygame.init()
 
@@ -25,13 +25,14 @@ def text_display(text):
     pygame.display.update()
     
 while not finished:
+    if pygame.time.get_ticks() - time_passed >= 1000:
+        time_passed = pygame.time.get_ticks()
+        time_remaining -= 1
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            # if the key pressed is SPACE, send a random
-            # integer string to the text_display function
             if event.key == pygame.K_SPACE:
                                             minutes = t / 60
                             seconds = t % 60
