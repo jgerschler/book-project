@@ -5,14 +5,8 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 finished = False
-time_passed = 0
-time_remaining = 60
-
-pygame.init()
-
-game_display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-game_display.fill(WHITE)
-pygame.display.update()
+minutes = 2
+seconds = 39
 
 def text_display(text):
     text_font = pygame.font.Font(None, 256)
@@ -23,21 +17,34 @@ def text_display(text):
                              game_display.get_height()/2)
     game_display.blit(text_surface, text_rectangle)
     pygame.display.update()
-    
+
+def timer(minutes, seconds):
+    starting_ticks = pygame.time.get_ticks()
+    time_remaining = minutes * 60 + seconds
+    while time_remaining > 0:
+        current_ticks = pygame.time.get_ticks()
+        if current_ticks - starting_ticks > 1000:
+            time_remaining -= 1
+            starting_ticks = pygame.time.get_ticks()
+        text_display("{:02d}:{:02d}".format(*divmod(time_remaining, 60)))
+    pygame.time.wait()
+    text_display("{:02d}:{:02d}".format(minutes, seconds))
+
+pygame.init()
+
+game_display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+game_display.fill(WHITE)
+text_display("{:02d}:{:02d}".format(minutes, seconds))
+pygame.display.update()
+
 while not finished:
-    if pygame.time.get_ticks() - time_passed >= 1000:
-        time_passed = pygame.time.get_ticks()
-        time_remaining -= 1
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
             if event.key == pygame.K_SPACE:
-                                            minutes = t / 60
-                            seconds = t % 60
-                            sf = "{:02d}:{:02d}".format(*divmod(t, 60))
-                text_display(str(randint(1, 10)))
+                timer(minutes, seconds)
         if event.type == pygame.QUIT:
             finished = True
       
