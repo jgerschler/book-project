@@ -6,9 +6,11 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 #countdown time in seconds
-START_TIME = 300
+clock_time = 300
+sf = "{:02d}:{:02d}".format(*divmod(clock_time, 60)) 
 
 finished = False
+timer_started = False
 
 pygame.init()
 
@@ -28,9 +30,18 @@ def text_display(text):
     #display the text
     game_display.blit(text_surface, text_rectangle)
     pygame.display.update()
+
+total_time = pygame.time.get_ticks()
     
 while not finished:
-    
+    if timer_started == True:
+        if pygame.time.get_ticks() - total_time >= 1000:
+            clock_time -= 1
+            total_time = pygame.time.get_ticks()
+            minutes = clock_time / 60
+            seconds = clock_time % 60
+            sf = "{:02d}:{:02d}".format(*divmod(clock_time, 60))    
+            
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
@@ -38,19 +49,9 @@ while not finished:
                 sys.exit()
             # if the key pressed is SPACE, start the timer
             if event.key == pygame.K_SPACE:
-                for t in range(START_TIME, -1, -1):
-                    minutes = t / 60
-                    seconds = t % 60
-                    sf = "{:02d}:{:02d}".format(*divmod(t, 60))               
-                    game_display.fill(WHITE)
-                    text_display(sf)
-                    pygame.display.update()
+                timer_started = True
         if event.type == pygame.QUIT:
             finished = True
-
-    if time - pygame.time.get_ticks() >= 1000:
-        clock_time -= 1
-        time = pygame.time.get_ticks()
 
     if clock_time == 0:
         finished = True
