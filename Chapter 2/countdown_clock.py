@@ -6,7 +6,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 #countdown time in seconds
-clock_time = 300
+clock_time = 30
 sf = "{:02d}:{:02d}".format(*divmod(clock_time, 60)) 
 
 finished = False
@@ -18,20 +18,15 @@ game_display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 game_display.fill(WHITE)
 pygame.display.update()
 
-# text display function, accepts string text input
 def text_display(text):
-    # our font is the pygame built-in, size 256
     text_font = pygame.font.Font(None, 256)
     text_surface = text_font.render(text, True, BLACK)
     text_rectangle = text_surface.get_rect()
     game_display.fill(WHITE)
     text_rectangle.center = (game_display.get_width()/2,
                              game_display.get_height()/2)
-    #display the text
     game_display.blit(text_surface, text_rectangle)
     pygame.display.update()
-
-total_time = pygame.time.get_ticks()
     
 while not finished:
     if timer_started == True:
@@ -47,8 +42,8 @@ while not finished:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            # if the key pressed is SPACE, start the timer
             if event.key == pygame.K_SPACE:
+                total_time = pygame.time.get_ticks()
                 timer_started = True
         if event.type == pygame.QUIT:
             finished = True
