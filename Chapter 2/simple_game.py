@@ -3,15 +3,11 @@ import pygame
 from random import randint
 
 WHITE = (255, 255, 255)
+# the color black
 BLACK = (0, 0, 0)
 
-# countdown time in seconds
-clock_time = 30
-# clock time digit formatting
-sf = "{:02d}:{:02d}".format(*divmod(clock_time, 60)) 
-
 finished = False
-timer_started = False
+game_phrases = ["10 Points", "20 Points", "30 Points", "40 Points", "-50 Points", "LOSE TURN"]
 
 pygame.init()
 
@@ -19,46 +15,38 @@ game_display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 game_display.fill(WHITE)
 pygame.display.update()
 
+# text display function, accepts string text input
 def text_display(text):
+    # our font is the pygame built-in, size 256
     text_font = pygame.font.Font(None, 256)
+    # our text surface is created by rendering the text
+    # using the chosen font
     text_surface = text_font.render(text, True, BLACK)
+    # get the rectangle for our text surface
     text_rectangle = text_surface.get_rect()
+    # fill the display with white
     game_display.fill(WHITE)
+    # center the text by centering its rectangle
     text_rectangle.center = (game_display.get_width()/2,
                              game_display.get_height()/2)
+    #display the text
     game_display.blit(text_surface, text_rectangle)
+    # update the display
     pygame.display.update()
     
 while not finished:
-    # if timer is started, start counting down
-    if timer_started == True:
-        if pygame.time.get_ticks() - total_time >= 1000:
-            clock_time -= 1
-            total_time = pygame.time.get_ticks()
-            minutes = clock_time / 60
-            seconds = clock_time % 60
-            sf = "{:02d}:{:02d}".format(*divmod(clock_time, 60))    
-            
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+            # if the key pressed is SPACE, send a random
+            # game phrase string to the text_display function
             if event.key == pygame.K_SPACE:
-                # if spacebar is pressed, get current ticks
-                # and start timer
-                total_time = pygame.time.get_ticks()
-                timer_started = True
+                # select random entry from game_phrases list
+                text_display(game_phrases[randint(0, len(game_phrases) - 1)])
         if event.type == pygame.QUIT:
             finished = True
-
-    if clock_time == 0:
-        finished = True
-
-    game_display.fill(WHITE)
-    # display time and update screen
-    text_display(sf)
-    pygame.display.update()
       
 pygame.quit()
 sys.exit()
